@@ -135,7 +135,7 @@ namespace XFrameworkBase
         /// <returns>是否存在对象池。</returns>
         public bool HasObjectPool(Predicate<CObjectPoolBase> condition)
         {
-       
+
             foreach (KeyValuePair<CTypeNamePair, CObjectPoolBase> objectPool in m_ObjectPools)
             {
                 if (condition(objectPool.Value))
@@ -164,7 +164,7 @@ namespace XFrameworkBase
         /// <returns>要获取的对象池。</returns>
         public CObjectPoolBase GetObjectPool(Type objectType)
         {
-           
+
             return InternalGetObjectPool(new CTypeNamePair(objectType));
         }
 
@@ -1068,7 +1068,7 @@ namespace XFrameworkBase
         /// <returns>是否销毁对象池成功。</returns>
         public bool DestroyObjectPool(Type objectType)
         {
-         
+
 
             return InternalDestroyObjectPool(new CTypeNamePair(objectType));
         }
@@ -1104,7 +1104,7 @@ namespace XFrameworkBase
         /// <returns>是否销毁对象池成功。</returns>
         public bool DestroyObjectPool<T>(IObjectPool<T> objectPool) where T : CObjectBase
         {
-           
+
             return InternalDestroyObjectPool(new CTypeNamePair(typeof(T), objectPool.Name));
         }
 
@@ -1168,9 +1168,9 @@ namespace XFrameworkBase
 
         private CObjectPoolBase InternalCreateObjectPool(Type objectType, string name, bool allowMultiSpawn, float autoReleaseInterval, int capacity, float expireTime, int priority)
         {
-            
+
             CTypeNamePair typeNamePair = new CTypeNamePair(objectType, name);
-           
+
 
             Type objectPoolType = typeof(CObjectPool<>).MakeGenericType(objectType);
             CObjectPoolBase objectPool = (CObjectPoolBase)Activator.CreateInstance(objectPoolType, name, allowMultiSpawn, autoReleaseInterval, capacity, expireTime, priority);

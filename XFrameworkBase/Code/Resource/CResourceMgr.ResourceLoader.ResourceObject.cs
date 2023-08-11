@@ -50,7 +50,7 @@ namespace XFrameworkBase
                     m_resPool = a_poolMgr.CreateMultiSpawnObjectPool<CResourceObject>("Resource Pool");
                 }
 
-                public void CreateResourceObject(string a_szResName, object a_oRes, IResourceHelper a_resHelper )
+                public void CreateResourceObject(string a_szResName, object a_oRes, IResourceHelper a_resHelper)
                 {
                     CResourceObject resObj = CResourceObject.Create(a_szResName, a_oRes, this, a_resHelper);
                     m_resPool.Register(resObj, true);
