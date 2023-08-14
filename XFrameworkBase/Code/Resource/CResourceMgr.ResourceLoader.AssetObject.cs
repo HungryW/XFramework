@@ -38,7 +38,7 @@ namespace XFrameworkBase
                     m_mapAssetBeDependNum.Clear();
                 }
 
-                public void CreateAsset(string a_szAssetName, object a_oAsset, List<object> a_listDependAsset, CResourceObject a_resObj)
+                public CAssetObject CreateAsset(string a_szAssetName, object a_oAsset, List<object> a_listDependAsset, CResourceObject a_resObj)
                 {
                     CAssetObject asset = CAssetObject.Create(a_szAssetName, a_oAsset, a_listDependAsset, a_resObj.Target, this);
                     m_assetPool.Register(asset, true);
@@ -52,6 +52,7 @@ namespace XFrameworkBase
                             a_resObj.AddDependRes(dependRes);
                         }
                     }
+                    return asset;
                 }
 
                 public void RemoveAssetObjectInfo(CAssetObject a_asset)

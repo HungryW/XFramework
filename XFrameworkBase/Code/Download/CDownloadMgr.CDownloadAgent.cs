@@ -6,16 +6,6 @@ using System.Text;
 
 namespace XFrameworkBase
 {
-    public static class Utility
-    {
-        public static class Text
-        {
-            public static string Format(string a_szFormat, params object[] a_args)
-            {
-                return string.Format(a_szFormat, a_args);
-            }
-        }
-    }
     public partial class CDownloadMgr
     {
         private class CDownloadAgent : ITaskAgent<CDownloadTask>, IDisposable

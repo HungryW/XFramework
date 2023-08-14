@@ -6,6 +6,8 @@ namespace XFrameworkBase
 {
     public partial class CResourceMgr : CGameframeworkMoudle
     {
+        private EResourceMode m_eMode;
+        private IResourceHelper m_helper;
         private CResourceInfoMgr m_resInfoMgr;
         private CAssetInfoMgr m_assetInfoMgr;
         private CResourceLoader m_resourceLoader;
@@ -13,6 +15,8 @@ namespace XFrameworkBase
 
         public CResourceMgr()
         {
+            m_eMode = EResourceMode.Package;
+            m_helper = null;
             m_resInfoMgr = new CResourceInfoMgr();
             m_assetInfoMgr = new CAssetInfoMgr();
             m_resourceLoader = new CResourceLoader(this);
@@ -31,6 +35,11 @@ namespace XFrameworkBase
         public override void Update(float a_fElapseSed, float a_fRealElapseSed)
         {
             m_resourceLoader.Update(a_fElapseSed, a_fRealElapseSed);
+        }
+
+        private void _UpdateResource(CResourceName a_resName)
+        {
+
         }
     }
 }
