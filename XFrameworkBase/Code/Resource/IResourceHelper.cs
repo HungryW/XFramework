@@ -6,6 +6,7 @@ namespace XFrameworkBase
 {
     public interface IResourceHelper
     {
+        public void LoadBytes(string a_szFileUri, CLoadBytesCallbacks a_callbacks, object a_oUserData);
         public void ReleaseResource(object a_res);
 
         public void UnloadScene(string a_szSceneAssetName, object a_oUserData);

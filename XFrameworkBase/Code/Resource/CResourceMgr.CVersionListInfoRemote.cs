@@ -9,11 +9,9 @@ namespace XFrameworkBase
 {
     public partial class CResourceMgr : CGameframeworkMoudle
     {
-        public static int[] ms_emptyArray = new int[] { };
-
-        public sealed class CSerializerVersionListPackage : CFrameWorkSerializer<CVersionListInfoPackage>
+        public sealed class CSerializerVersionListRemote : CFrameWorkSerializer<CVersionListInfoRemote>
         {
-            private static readonly byte[] Header = new byte[] { (byte)'X', (byte)'F', (byte)'P' };
+            private static readonly byte[] Header = new byte[] { (byte)'X', (byte)'F', (byte)'R' };
 
             protected override byte[] __GetHeader()
             {
@@ -21,7 +19,7 @@ namespace XFrameworkBase
             }
         }
 
-        public sealed class CVersionListInfoPackage
+        public sealed class CVersionListInfoRemote
         {
             public static readonly CAssetInfo[] ms_EmptyAssetInfo = new CAssetInfo[] { };
             public static readonly CResourceInfo[] ms_EmptyResourceInfo = new CResourceInfo[] { };
@@ -31,7 +29,7 @@ namespace XFrameworkBase
             public readonly CAssetInfo[] m_arrAsset;
             public readonly CResourceInfo[] m_arrResource;
 
-            public CVersionListInfoPackage(string a_szGameVersion, int a_nResVersion, CResourceInfo[] a_arrResInfo, CAssetInfo[] a_arrAssetInfo)
+            public CVersionListInfoRemote(string a_szGameVersion, int a_nResVersion, CResourceInfo[] a_arrResInfo, CAssetInfo[] a_arrAssetInfo)
             {
                 m_szGameVersion = a_szGameVersion;
                 m_nResVersion = a_nResVersion;
@@ -59,9 +57,11 @@ namespace XFrameworkBase
                 public readonly byte m_nLoadType;
                 public readonly int m_nLen;
                 public readonly int m_nHashCode;
+                public readonly int m_nCompressLen;
+                public readonly int m_nCompressHash;
                 public readonly int[] m_arrAssetIdx;
 
-                public CResourceInfo(string szName, string szVariant, string szExtension, byte nLoadType, int nLen, int nHashCode, int[] arrAssetIdx)
+                public CResourceInfo(string szName, string szVariant, string szExtension, byte nLoadType, int nLen, int nHashCode, int a_nCompressLen, int a_nCopressHash, int[] arrAssetIdx)
                 {
                     m_szName = szName;
                     m_szVariant = szVariant;
@@ -69,6 +69,8 @@ namespace XFrameworkBase
                     m_nLoadType = nLoadType;
                     m_nLen = nLen;
                     m_nHashCode = nHashCode;
+                    m_nCompressLen = a_nCompressLen;
+                    m_nCompressHash = a_nCopressHash;
                     m_arrAssetIdx = arrAssetIdx;
                 }
             }
@@ -76,9 +78,7 @@ namespace XFrameworkBase
 
         public static partial class BuiltinVersionListSerializer
         {
-            private const int mc_nCacheHashBytesLen = 4;
-            private static readonly byte[] mc_arrCacheHashBytes = new byte[mc_nCacheHashBytesLen];
-            public static CVersionListInfoPackage PackageVeriosnListDeserializeCallback_V0(Stream stream)
+            public static CVersionListInfoRemote RemoteVeriosnListDeserializeCallback_V0(Stream stream)
             {
                 using (BinaryReader binaryReader = new BinaryReader(stream, Encoding.UTF8))
                 {
@@ -86,8 +86,8 @@ namespace XFrameworkBase
                     string szApplicationGameVerison = binaryReader.ReadEncryptedString(arrEncryptBytes);
                     int nInernalResourceVersion = binaryReader.Read7BitEncodedInt32();
                     int nAssetCount = binaryReader.Read7BitEncodedInt32();
-                    CVersionListInfoPackage.CAssetInfo[] arrAsset = nAssetCount > 0 ? new
-                        CVersionListInfoPackage.CAssetInfo[nAssetCount] : CVersionListInfoPackage.ms_EmptyAssetInfo;
+                    CVersionListInfoRemote.CAssetInfo[] arrAsset = nAssetCount > 0 ? new
+                        CVersionListInfoRemote.CAssetInfo[nAssetCount] : CVersionListInfoRemote.ms_EmptyAssetInfo;
 
                     for (int i = 0; i < nAssetCount; i++)
                     {
@@ -98,11 +98,11 @@ namespace XFrameworkBase
                         {
                             arrDependIdx[j] = binaryReader.Read7BitEncodedInt32();
                         }
-                        arrAsset[i] = new CVersionListInfoPackage.CAssetInfo(szAssetName, arrDependIdx);
+                        arrAsset[i] = new CVersionListInfoRemote.CAssetInfo(szAssetName, arrDependIdx);
                     }
 
                     int nResourceCount = binaryReader.Read7BitEncodedInt32();
-                    CVersionListInfoPackage.CResourceInfo[] arrResource = nResourceCount > 0 ? new CVersionListInfoPackage.CResourceInfo[nResourceCount] : CVersionListInfoPackage.ms_EmptyResourceInfo;
+                    CVersionListInfoRemote.CResourceInfo[] arrResource = nResourceCount > 0 ? new CVersionListInfoRemote.CResourceInfo[nResourceCount] : CVersionListInfoRemote.ms_EmptyResourceInfo;
                     for (int i = 0; i < nResourceCount; i++)
                     {
                         string szName = binaryReader.ReadEncryptedString(arrEncryptBytes);
@@ -111,15 +111,17 @@ namespace XFrameworkBase
                         byte loadType = binaryReader.ReadByte();
                         int nLen = binaryReader.Read7BitEncodedInt32();
                         int nHash = binaryReader.Read7BitEncodedInt32();
+                        int nCompressLen = binaryReader.Read7BitEncodedInt32();
+                        int nCompressHash = binaryReader.Read7BitEncodedInt32();    
                         int nAssetIdxCount = binaryReader.Read7BitEncodedInt32();
                         int[] arrAssetIdx = nAssetIdxCount > 0 ? new int[nAssetIdxCount] : ms_emptyArray;
                         for (int j = 0; j < nAssetIdxCount; j++)
                         {
                             arrAssetIdx[j] = binaryReader.Read7BitEncodedInt32();
                         }
-                        arrResource[i] = new CVersionListInfoPackage.CResourceInfo(szName, szVariant, szExtension, loadType, nLen, nHash, arrAssetIdx);
+                        arrResource[i] = new CVersionListInfoRemote.CResourceInfo(szName, szVariant, szExtension, loadType, nLen, nHash, nCompressLen, nCompressHash, arrAssetIdx);
                     }
-                    return new CVersionListInfoPackage(szApplicationGameVerison, nInernalResourceVersion, arrResource, arrAsset);
+                    return new CVersionListInfoRemote(szApplicationGameVerison, nInernalResourceVersion, arrResource, arrAsset);
                 }
             }
         }
