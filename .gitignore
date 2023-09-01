@@ -1,3 +1,13 @@
 .vs/
 bin/
 obj/
+Library
+Logs
+UserSettings
+/XFrameworkUnity/.vsconfig
+/XFrameworkUnity/Assembly-CSharp.csproj
+/XFrameworkUnity/Assembly-CSharp-Editor.csproj
+/XFrameworkUnity/XFrameworkBase.csproj
+/XFrameworkUnity/XFrameworkUnity.sln
+/XFrameworkUnity/*.csproj
+/XFrameworkUnity/*.sln
